@@ -53,7 +53,7 @@ public class UserService implements UserServiceBase {
   }
 
   @Override
-  public synchronized void buy(int userId)
+  public synchronized Cart buy(int userId)
           throws UserNotFoundException, ProductNotFoundException, NegativeProductCountException {
     var cart = getCart(userId);
     var prods = cart.getProducts();
@@ -63,6 +63,7 @@ public class UserService implements UserServiceBase {
     }
 
     cart.flush();
+    return cart;
   }
 
   private Cart getCart(int userId) throws UserNotFoundException {
