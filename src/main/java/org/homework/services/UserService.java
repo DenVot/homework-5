@@ -51,13 +51,15 @@ public class UserService implements UserServiceBase {
   }
 
   @Override
-  public void buy(int userId) throws UserNotFoundException, ProductNotFoundException {
+  public synchronized void buy(int userId) throws UserNotFoundException, ProductNotFoundException {
     var cart = getCart(userId);
     var prods = cart.getProducts();
 
     for (String productName : prods.keySet()) {
       productRepository.decreaseProduct(productName, prods.get(productName));
     }
+
+    cart.flush();
   }
 
   private Cart getCart(int userId) throws UserNotFoundException {
