@@ -10,7 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class fileRead {
+public class ConfigReader {
   public static ArrayList<ProductEntity> readFromJsonFile(String fileName) throws ParseException, IOException {
     ArrayList<ProductEntity> result = new ArrayList<>();
     JSONParser parser = new JSONParser();
