@@ -4,14 +4,14 @@ import org.homework.entities.ProductEntity;
 import org.homework.exceptions.ProductNotFoundException;
 
 import java.security.InvalidParameterException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class InMemoryProductRepository implements ProductRepository {
-  private final Map<String, ProductEntity> products;
+  private final ConcurrentMap<String, ProductEntity> products;
 
   public InMemoryProductRepository(Iterable<ProductEntity> productsArr) {
-    products = new HashMap<>();
+    products = new ConcurrentHashMap<>();
 
     for (var product : productsArr) {
       products.put(product.getName(), product);
