@@ -17,7 +17,6 @@ public class fileRead {
 
     try {
       JSONArray array = (JSONArray) parser.parse(new FileReader(fileName));
-    //расположение нашего файла: "src/main/java/org/homework/reader/inputFile.json"
 
       for (Object object : array) {
         JSONObject person = (JSONObject) object;
