@@ -5,5 +5,6 @@ import org.homework.exceptions.UserNotFoundException;
 
 public interface UserRepository {
   User getUser(int id) throws UserNotFoundException;
+
   User createUser();
 }
