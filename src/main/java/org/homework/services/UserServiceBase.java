@@ -1,12 +1,15 @@
 package org.homework.services;
 
 import org.homework.entities.User;
+import org.homework.exceptions.ProductNotFoundException;
+import org.homework.exceptions.UserNotFoundException;
 
 public interface UserServiceBase {
-  User getUser(int id);
+  User getUser(int id) throws UserNotFoundException;
   User createUser();
-  void setCartForUser(int userId, String name, int amount);
-  void increaseCartForUser(int userId, String name, int amount);
-  void decreaseCartForUser(int userId, String name, int amount);
-  void flushCartForUser(int userId);
+  void setCartForUser(int userId, String name, int amount) throws UserNotFoundException;
+  void increaseCartForUser(int userId, String name, int amount) throws UserNotFoundException, ProductNotFoundException;
+  void decreaseCartForUser(int userId, String name, int amount) throws UserNotFoundException, ProductNotFoundException;
+  void flushCartForUser(int userId) throws UserNotFoundException;
+  void buy(int userId) throws UserNotFoundException, ProductNotFoundException;
 }
