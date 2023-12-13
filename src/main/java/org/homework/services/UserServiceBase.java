@@ -1,6 +1,7 @@
 package org.homework.services;
 
 import org.homework.entities.User;
+import org.homework.exceptions.NegativeProductCountException;
 import org.homework.exceptions.ProductNotFoundException;
 import org.homework.exceptions.UserNotFoundException;
 
@@ -17,5 +18,5 @@ public interface UserServiceBase {
 
   void flushCartForUser(int userId) throws UserNotFoundException;
 
-  void buy(int userId) throws UserNotFoundException, ProductNotFoundException;
+  void buy(int userId) throws UserNotFoundException, ProductNotFoundException, NegativeProductCountException;
 }
