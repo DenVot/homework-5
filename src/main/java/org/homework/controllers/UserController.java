@@ -1,9 +1,12 @@
 package org.homework.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.security.InvalidParameterException;
 import org.eclipse.jetty.http.HttpStatus;
 import org.homework.controllers.dto.UserRequest;
 import org.homework.controllers.dto.UserResponse;
+import org.homework.exceptions.NegativeProductCountException;
+import org.homework.exceptions.ProductNotFoundException;
 import org.homework.exceptions.UserNotFoundException;
 import org.homework.services.UserServiceBase;
 import org.slf4j.Logger;
@@ -33,6 +36,7 @@ public class UserController implements Controller{
     increaseCartForUser();
     decreaseCartForUser();
     flushCartForUser();
+    buyCart();
   }
 
   private void createUser() {
@@ -102,6 +106,11 @@ public class UserController implements Controller{
             response.status(HttpStatus.BAD_REQUEST_400);
             return objectMapper.writeValueAsString(
                 new UserResponse.ErrorResponse("User not with id " + id + " not found"));
+          } catch (InvalidParameterException e) {
+            LOG.warn("Invalid product amount", e);
+            response.status(HttpStatus.BAD_REQUEST_400);
+            return objectMapper.writeValueAsString(
+                new UserResponse.ErrorResponse("Invalid product amount"));
           } catch (Exception e) {
             LOG.error("Unhandled error", e);
             response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
@@ -131,6 +140,16 @@ public class UserController implements Controller{
             response.status(HttpStatus.BAD_REQUEST_400);
             return objectMapper.writeValueAsString(
                 new UserResponse.ErrorResponse("User not with id " + id + " not found"));
+          } catch (ProductNotFoundException e) {
+            LOG.warn("Cannot find product", e);
+            response.status(HttpStatus.BAD_REQUEST_400);
+            return objectMapper.writeValueAsString(
+                new UserResponse.ErrorResponse("Product not found"));
+          } catch (InvalidParameterException e) {
+            LOG.warn("Invalid product amount", e);
+            response.status(HttpStatus.BAD_REQUEST_400);
+            return objectMapper.writeValueAsString(
+                new UserResponse.ErrorResponse("Invalid product amount"));
           } catch (RuntimeException e) {
             LOG.error("Unhandled error", e);
             response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
@@ -159,6 +178,21 @@ public class UserController implements Controller{
             response.status(HttpStatus.BAD_REQUEST_400);
             return objectMapper.writeValueAsString(
                 new UserResponse.ErrorResponse("User not with id " + id + " not found"));
+          } catch (ProductNotFoundException e) {
+            LOG.warn("Cannot find product", e);
+            response.status(HttpStatus.BAD_REQUEST_400);
+            return objectMapper.writeValueAsString(
+                new UserResponse.ErrorResponse("Product not found"));
+          } catch (InvalidParameterException e) {
+            LOG.warn("Invalid product amount", e);
+            response.status(HttpStatus.BAD_REQUEST_400);
+            return objectMapper.writeValueAsString(
+                new UserResponse.ErrorResponse("Invalid product amount"));
+          } catch (NegativeProductCountException e) {
+            LOG.warn("Not enough products in cart", e);
+            response.status(HttpStatus.BAD_REQUEST_400);
+            return objectMapper.writeValueAsString(
+                new UserResponse.ErrorResponse("Not enough products in cart"));
           } catch (RuntimeException e) {
             LOG.error("Unhandled error", e);
             response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
@@ -185,6 +219,42 @@ public class UserController implements Controller{
             response.status(HttpStatus.BAD_REQUEST_400);
             return objectMapper.writeValueAsString(
                 new UserResponse.ErrorResponse("User not with id " + id + " not found"));
+          } catch (RuntimeException e) {
+            LOG.error("Unhandled error", e);
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
+            return objectMapper.writeValueAsString(
+                new UserResponse.ErrorResponse("Internal server error"));
+          }
+          return "";
+        });
+  }
+
+  private void buyCart() {
+    service.patch(
+        "/api/user/buy/:id",
+        (Request request, Response response) -> {
+          response.type("application/json");
+          String id = request.params(":id");
+
+          try {
+            var userId = Integer.parseInt(id);
+            userService.buy(userId);
+            response.status(HttpStatus.NO_CONTENT_204);
+          } catch (UserNotFoundException e) {
+            LOG.warn("Cannot find user", e);
+            response.status(HttpStatus.BAD_REQUEST_400);
+            return objectMapper.writeValueAsString(
+                new UserResponse.ErrorResponse("User not with id " + id + " not found"));
+          } catch (ProductNotFoundException e) {
+            LOG.warn("Cannot find product", e);
+            response.status(HttpStatus.BAD_REQUEST_400);
+            return objectMapper.writeValueAsString(
+                new UserResponse.ErrorResponse("Product not found"));
+          } catch (NegativeProductCountException e) {
+            LOG.warn("Not enough products in the storage", e);
+            response.status(HttpStatus.BAD_REQUEST_400);
+            return objectMapper.writeValueAsString(
+                new UserResponse.ErrorResponse("Not enough products in the storage"));
           } catch (RuntimeException e) {
             LOG.error("Unhandled error", e);
             response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
