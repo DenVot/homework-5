@@ -48,7 +48,7 @@ public class UserController implements Controller{
           try {
             var user = userService.createUser();
             response.status(HttpStatus.CREATED_201);
-            LOG.debug("Comment successfully added");
+            LOG.debug("User successfully created");
             return objectMapper.writeValueAsString(new UserResponse.CreateUser(user.getId()));
           } catch (RuntimeException e) {
             LOG.error("Unhandled error", e);
@@ -71,7 +71,7 @@ public class UserController implements Controller{
             var user = userService.getUser(userId);
 
             response.status(HttpStatus.OK_200);
-            LOG.debug("Comment successfully added");
+            LOG.debug("User successfully get");
             return objectMapper.writeValueAsString(
                 new UserResponse.GetUser(user.getId(), user.getCart()));
           } catch (UserNotFoundException e) {
