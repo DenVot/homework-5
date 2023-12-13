@@ -1,7 +1,9 @@
 package org.homework.entities;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.homework.exceptions.ProductNotFoundException;
 
+import java.security.InvalidParameterException;
+import java.util.Collections;
 import java.util.Map;
 
 public class Cart {
@@ -11,19 +13,43 @@ public class Cart {
     this.products = products;
   }
 
+  public Map<String, Integer> getProducts() {
+    return Collections.unmodifiableMap(products);
+  }
+
   public void set(String name, int amount) {
-    throw new NotImplementedException();
+    if (amount <= 0) {
+      throw new InvalidParameterException();
+    }
+
+    products.put(name, amount);
   }
 
-  public void increase(String name, int amount) {
-    throw new NotImplementedException();
+  public void increase(String name, int amount) throws ProductNotFoundException {
+    if (amount <= 0) {
+      throw new InvalidParameterException();
+    }
+
+    if (!products.containsKey(name)) {
+      throw new ProductNotFoundException();
+    }
+
+    products.put(name, products.getOrDefault(name, 0) + amount);
   }
 
-  public void decrease(String name, int amount) {
-    throw new NotImplementedException();
+  public void decrease(String name, int amount) throws ProductNotFoundException {
+    if (amount <= 0) {
+      throw new InvalidParameterException();
+    }
+
+    if (!products.containsKey(name)) {
+      throw new ProductNotFoundException();
+    }
+
+    products.put(name, products.getOrDefault(name, 0) - amount);
   }
 
   public void flush() {
-    throw new NotImplementedException();
+    products.replaceAll((k, v) -> 0);
   }
 }
