@@ -14,7 +14,7 @@ public interface UserServiceBase {
 
   void increaseCartForUser(int userId, String name, int amount) throws UserNotFoundException, ProductNotFoundException;
 
-  void decreaseCartForUser(int userId, String name, int amount) throws UserNotFoundException, ProductNotFoundException;
+  void decreaseCartForUser(int userId, String name, int amount) throws UserNotFoundException, ProductNotFoundException, NegativeProductCountException;
 
   void flushCartForUser(int userId) throws UserNotFoundException;
 

@@ -40,7 +40,8 @@ public class UserService implements UserServiceBase {
   }
 
   @Override
-  public void decreaseCartForUser(int userId, String name, int amount) throws UserNotFoundException, ProductNotFoundException {
+  public void decreaseCartForUser(int userId, String name, int amount)
+          throws UserNotFoundException, ProductNotFoundException, NegativeProductCountException {
     var cart = getCart(userId);
     cart.decrease(name, amount);
   }
