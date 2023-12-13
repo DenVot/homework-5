@@ -18,6 +18,10 @@ public class Cart {
   }
 
   public void set(String name, int amount) {
+    if (amount <= 0) {
+      throw new InvalidParameterException();
+    }
+
     products.put(name, amount);
   }
 
