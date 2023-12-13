@@ -2,6 +2,7 @@ package org.homework.services;
 
 import org.homework.entities.Cart;
 import org.homework.entities.User;
+import org.homework.exceptions.NegativeProductCountException;
 import org.homework.exceptions.ProductNotFoundException;
 import org.homework.exceptions.UserNotFoundException;
 import org.homework.repositories.ProductRepository;
@@ -51,7 +52,8 @@ public class UserService implements UserServiceBase {
   }
 
   @Override
-  public synchronized void buy(int userId) throws UserNotFoundException, ProductNotFoundException {
+  public synchronized void buy(int userId)
+          throws UserNotFoundException, ProductNotFoundException, NegativeProductCountException {
     var cart = getCart(userId);
     var prods = cart.getProducts();
 
