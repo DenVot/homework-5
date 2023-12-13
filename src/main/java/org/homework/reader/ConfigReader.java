@@ -11,30 +11,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class ConfigReader {
-  public static ArrayList<ProductEntity> readFromJsonFile(String fileName) throws ParseException, IOException {
+  public static ArrayList<ProductEntity> readFromJsonFile(String fileName) throws IOException, ParseException {
     ArrayList<ProductEntity> result = new ArrayList<>();
     JSONParser parser = new JSONParser();
 
-    try {
-      JSONArray array = (JSONArray) parser.parse(new FileReader(fileName));
+    try (var file = new FileReader(fileName)) {
+      JSONArray array = (JSONArray) parser.parse(file);
 
       for (Object object : array) {
-        JSONObject person = (JSONObject) object;
+        JSONObject token = (JSONObject) object;
 
-        String name = (String) person.get("name");
-        System.out.println(name);
+        String name = (String) token.get("name");
 
-        String amount = (String) person.get("amount");
-        System.out.println(amount);
+        Long amount = (Long) token.get("amount");
 
-        String measure = (String) person.get("measure");
-        System.out.println(measure);
+        String measure = (String) token.get("measure");
 
-        ProductEntity product = new ProductEntity(name, Integer.parseInt(amount), measure);
+        ProductEntity product = new ProductEntity(name, amount.intValue(), measure);
         result.add(product);
       }
-    } catch (IOException ex) {
-      ex.printStackTrace();
     }
     return result;
   }

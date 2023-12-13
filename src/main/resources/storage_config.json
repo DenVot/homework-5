@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Bread",
+    "amount": 100,
+    "measure": "loaf"
+  },
+  {
+    "name": "Flour",
+    "amount": 50,
+    "measure": "kg"
+  },
+  {
+    "name": "Water",
+    "amount": 400,
+    "measure": "l"
+  }
+]

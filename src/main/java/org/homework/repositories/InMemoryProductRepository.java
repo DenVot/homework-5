@@ -32,7 +32,7 @@ public class InMemoryProductRepository implements ProductRepository {
   @Override
   public void decreaseProduct(String name, int amount)
           throws ProductNotFoundException, NegativeProductCountException {
-    if (amount <= 0) {
+    if (amount < 0) {
       throw new InvalidParameterException();
     }
 
