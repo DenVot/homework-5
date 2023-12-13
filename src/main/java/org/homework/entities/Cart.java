@@ -1,5 +1,6 @@
 package org.homework.entities;
 
+import org.homework.exceptions.NegativeProductCountException;
 import org.homework.exceptions.ProductNotFoundException;
 
 import java.security.InvalidParameterException;
@@ -37,13 +38,20 @@ public class Cart {
     products.put(name, products.getOrDefault(name, 0) + amount);
   }
 
-  public void decrease(String name, int amount) throws ProductNotFoundException {
+  public void decrease(String name, int amount)
+          throws ProductNotFoundException, NegativeProductCountException {
     if (amount <= 0) {
       throw new InvalidParameterException();
     }
 
     if (!products.containsKey(name)) {
       throw new ProductNotFoundException();
+    }
+
+    var newAmount = products.getOrDefault(name, 0) - amount;
+
+    if (newAmount < 0) {
+      throw new NegativeProductCountException();
     }
 
     products.put(name, products.getOrDefault(name, 0) - amount);
