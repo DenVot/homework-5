@@ -1,6 +1,7 @@
 package org.homework.repositories;
 
 import org.homework.entities.ProductEntity;
+import org.homework.exceptions.NegativeProductCountException;
 import org.homework.exceptions.ProductNotFoundException;
 
 import java.security.InvalidParameterException;
@@ -19,7 +20,8 @@ public class InMemoryProductRepository implements ProductRepository {
   }
 
   @Override
-  public void increaseProduct(String name, int amount) throws ProductNotFoundException {
+  public void increaseProduct(String name, int amount)
+          throws ProductNotFoundException, NegativeProductCountException {
     if (amount <= 0) {
       throw new InvalidParameterException();
     }
@@ -28,7 +30,8 @@ public class InMemoryProductRepository implements ProductRepository {
   }
 
   @Override
-  public void decreaseProduct(String name, int amount) throws ProductNotFoundException {
+  public void decreaseProduct(String name, int amount)
+          throws ProductNotFoundException, NegativeProductCountException {
     if (amount <= 0) {
       throw new InvalidParameterException();
     }
@@ -36,13 +39,18 @@ public class InMemoryProductRepository implements ProductRepository {
     changeOnDeltaProduct(name, -amount);
   }
 
-  private void changeOnDeltaProduct(String name, int delta) throws ProductNotFoundException {
+  private void changeOnDeltaProduct(String name, int delta)
+          throws ProductNotFoundException, NegativeProductCountException {
     if (!products.containsKey(name)) {
       throw new ProductNotFoundException();
     }
 
     var product = products.get(name);
     var newAmount = products.get(name).getAmount() + delta;
+
+    if (newAmount < 0) {
+      throw new NegativeProductCountException();
+    }
 
     product.setAmount(newAmount);
   }

@@ -23,7 +23,7 @@ public class InMemoryUserRepository implements UserRepository {
 
   @Override
   public User getUser(int id) throws UserNotFoundException {
-    if (users.containsKey(id)) {
+    if (!users.containsKey(id)) {
       throw new UserNotFoundException();
     }
 
